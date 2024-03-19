@@ -17,18 +17,9 @@
 					if (HandleExitOption(currentConverter)) break;
 					ConvertCurrency(currentConverter, amountQuantity);
 				}
-				catch (ArgumentException ex)
-				{
-					Console.WriteLine("[---------------------------------|");
-					Console.WriteLine($"[ ***** {ex.Message} *****");
-					Console.WriteLine("[---------------------------------|");
-				}
-				catch (FormatException)
-				{
-					Console.WriteLine("[---------------------------------|");
-					Console.WriteLine($"[ ***** Just Number *****");
-					Console.WriteLine("[---------------------------------|");
-				}
+				catch (ArgumentException ex) { DisplayExceptionMessage(ex.Message); }
+				catch (FormatException) { DisplayExceptionMessage("Just Number"); }
+				catch (Exception) { DisplayExceptionMessage("Ops... Error"); }
 			}
 		}
 
@@ -99,7 +90,7 @@
 		private static void DisplayConversionResult(decimal convertedValue)
 		{
 			Console.WriteLine("[---------------------------------|");
-			Console.WriteLine($"[ Quantity: {convertedValue}");
+			Console.WriteLine($"[ Result: {convertedValue}");
 			Console.WriteLine("[---------------------------------|");
 		}
 
@@ -112,6 +103,13 @@
 			}
 
 			return false;
+		}
+
+		private static void DisplayExceptionMessage(string error)
+		{
+			Console.WriteLine("[---------------------------------|");
+			Console.WriteLine($"[ ***** {error} *****");
+			Console.WriteLine("[---------------------------------|");
 		}
 
 		private static decimal ConverterDollarToReal(decimal stateValue) =>
