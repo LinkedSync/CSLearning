@@ -7,28 +7,39 @@
 
 		private static void AppMenu()
 		{
-			try
+			while (true)
 			{
-				var amountQuantity = GetQuantityFromUser();
-				var currentConverter = GetCurrencyOptionFromUser();
+				try
+				{
+					var amountQuantity = GetQuantityFromUser();
+					var currentConverter = GetCurrencyOptionFromUser();
 
-				ConvertCurrency(currentConverter, amountQuantity);
-			}
-			catch (ArgumentException ex)
-			{
-				Console.WriteLine("[---------------------------------|");
-				Console.WriteLine($"[ ***** {ex.Message} *****");
-				Console.WriteLine("[---------------------------------|");
+					if (HandleExitOption(currentConverter)) break;
+					ConvertCurrency(currentConverter, amountQuantity);
+				}
+				catch (ArgumentException ex)
+				{
+					Console.WriteLine("[---------------------------------|");
+					Console.WriteLine($"[ ***** {ex.Message} *****");
+					Console.WriteLine("[---------------------------------|");
+				}
+				catch (FormatException)
+				{
+					Console.WriteLine("[---------------------------------|");
+					Console.WriteLine($"[ ***** Just Number *****");
+					Console.WriteLine("[---------------------------------|");
+				}
 			}
 		}
 
 		private static byte GetCurrencyOptionFromUser()
 		{
 			Console.WriteLine("[---------------------------------|");
+			Console.WriteLine("[ 0 ] Exit");
 			Console.WriteLine("[ 1 ] Real To Dolar");
-
 			Console.WriteLine("[ 2 ] Dollar To Real");
 			Console.Write("[---------------------------------|\n[ ");
+
 			return Convert.ToByte(Console.ReadLine());
 		}
 
@@ -40,16 +51,9 @@
 			return Convert.ToDecimal(Console.ReadLine());
 		}
 
-		private static void DisplayConversionResult(decimal convertedValue)
-		{
-			Console.WriteLine("[---------------------------------|");
-			Console.WriteLine($"[ Quantity: {convertedValue}");
-			Console.WriteLine("[---------------------------------|");
-		}
-
 		private static void ConvertCurrency(byte currencyOption, decimal amount)
 		{
-			decimal convertedTo = 0.0m;
+			decimal convertedTo;
 
 			switch (currencyOption)
 			{
@@ -66,6 +70,24 @@
 				default:
 					throw new ArgumentException($"Invalid Operation {currencyOption}");
 			}
+		}
+
+		private static void DisplayConversionResult(decimal convertedValue)
+		{
+			Console.WriteLine("[---------------------------------|");
+			Console.WriteLine($"[ Quantity: {convertedValue}");
+			Console.WriteLine("[---------------------------------|");
+		}
+
+		private static bool HandleExitOption(byte currencyOption)
+		{
+			if (currencyOption == 0)
+			{
+				Environment.Exit(0);
+				return true;
+			}
+
+			return false;
 		}
 
 		private static decimal ConverterDollarToReal(decimal stateValue) =>
